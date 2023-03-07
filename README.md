@@ -51,6 +51,7 @@ Then you can run `infer.py`:
 python infer.py --path_to_pretrained_model=PATH_TO_PRETRAINED_MODEL --input_dir=PATH_TO_DIR_WITH_IMAGES
 ```
 
+## Old instruction
 ### Dataset
 See [Peoject Page](https://mhaiyang.github.io/CVPR2020_GDNet/index.html)
 
