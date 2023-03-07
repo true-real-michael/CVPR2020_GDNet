@@ -1,4 +1,7 @@
+torch==1.0.0
+torchvision==0.2.1
 Cython
+pillow==6.2.2
 scikit-image==0.16.2
 xlwt
 tqdm
