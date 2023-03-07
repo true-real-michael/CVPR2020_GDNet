@@ -22,8 +22,7 @@ from config import gdd_testing_root, gdd_results_root
 from misc import check_mkdir, crf_refine
 from gdnet import GDNet
 
-device_ids = [0]
-torch.cuda.set_device(device_ids[0])
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -54,7 +53,7 @@ def main():
     ])
     to_pil = transforms.ToPILImage()
 
-    net = GDNet().cuda(device_ids[0])
+    net = GDNet().to(device)
 
     net.load_state_dict(torch.load(opt.path_to_pretrained_model))
     print('Load {} succeed!'.format(os.path.basename(opt.path_to_pretrained_model)))
@@ -73,7 +72,7 @@ def main():
                 img = img.convert('RGB')
                 print("{} is a gray image.".format(name))
             w, h = img.size
-            img_var = Variable(img_transform(img).unsqueeze(0)).cuda(device_ids[0])
+            img_var = Variable(img_transform(img).unsqueeze(0)).to(device)
             f1, f2, f3 = net(img_var)
             f1 = f1.data.squeeze(0).cpu()
             f2 = f2.data.squeeze(0).cpu()
