@@ -36,26 +36,12 @@ docker build -t gdnet .
 
 
 ### Usage
-Create a container from the built image
+INPUT_DIR should contain target images, OUTPUT_DIR will store the generated masks. Running the docker image:
 ```
-docker run -d --name gdnet_container gdnet
-```
-
-It is necessary to copy model and input to the container.
-You can download trained model [here](https://mhaiyang.github.io/CVPR2020_GDNet/index.html).
-To copy the pretrained model and input directory to the container, run
-```
-docker cp MODEL.PTH gdnet_container:/200.pth
-docker cp INPUT_DIR dgnet_container:/input
-```
-
-To run the container, run
-```
-docker start gdnet_container
-```
-To copy the results from the container, run:
-```
-docker cp gdnet_container:/output OUTPUT_DIR
+docker run --rm \
+-v INPUT_DIR:/input \
+-v OUTPUT_DIR:/output \
+gdnet
 ```
 
 
