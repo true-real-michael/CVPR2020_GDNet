@@ -44,7 +44,7 @@ def main():
         '--output_dir',
         type=str,
         help='Path to the directory in which the result images are written',
-        default='ouput'
+        default='/output'
     )
     parser.add_argument(
         '--scale',
