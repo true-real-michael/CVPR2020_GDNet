@@ -24,23 +24,37 @@ from gdnet import GDNet
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
 def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        '--path_to_pretrained_model', type=str, help='Path to the .pth file')
+        '--path_to_pretrained_model',
+        type=str,
+        help='Path to the .pth file',
+        default='/200.pth'
+    )
     parser.add_argument(
-        '--input_dir', type=str, default='input_images',
-        help='Path to the directory that contains the images')
+        '--input_dir',
+        type=str,
+        help='Path to the directory that contains the images',
+        default='/input'
+    )
     parser.add_argument(
-        '--output_dir', type=str, default='ouput_images',
-        help='Path to the directory in which the result images are written')
+        '--output_dir',
+        type=str,
+        help='Path to the directory in which the result images are written',
+        default='ouput'
+    )
     parser.add_argument(
-        '--scale', type=int, default=416,
+        '--scale',
+        type=int,
+        default=416,
         help='Scale parameter for resizing images. Default: 416'
     )
     parser.add_argument(
-        '--crf_refine', action='store_true',
+        '--crf_refine',
+        action='store_true',
         help='Optional CRF refinement. Default: False'
     )
 
