@@ -8,4 +8,4 @@ RUN pip install -U pip \
     && python setup.py install \
     && cd ..
 
-ENTRYPOINT ["bash", "eval.sh", "--path_to_pretrained_model=200.pth", "--input_dir=input"]
+ENTRYPOINT ["python", "infer.py", "--path_to_pretrained_model=/200.pth", "--input_dir=/input", "--output_dir=/output"]
