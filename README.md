@@ -21,35 +21,43 @@ If you use this code or our dataset (including test set), please cite:
 }
 ```
 
-## Updated on 07.03.2023
+## Updated on 15.03.2023
 ### Installation
-First you need to clone this repository:
+First you need to clone this repository recursively (to clone the dss_crf submodule as well):
 ```
-git clone https://github.com/vnmsklnk/CVPR2020_GDNet
+git clone --recurse-submodules https://github.com/vnmsklnk/CVPR2020_GDNet
 cd CVPR2020_GDNet
 ```
 
-Then you can create a Python 3.7 virtual environment with new requirements.txt file:
+Then you need to build a docker image:
 ```
-virtualenv -p `which python3.7` venv
-source venv/bin/activate
-pip install -r requirements.txt
+docker build -t gdnet .
 ```
 
-Finally you need to install `pydensecrf` with active `venv`:
-```
-git clone https://github.com/vnmsklnk/dss_crf.git
-cd dss_crf
-python setup.py install
-```
 
 ### Usage
-First you need to download trained model at [here](https://mhaiyang.github.io/CVPR2020_GDNet/index.html).
+Create a container from the built image
+```
+docker run -d --name gdnet_container gdnet
+```
 
-Then you can run `infer.py`:
+It is necessary to copy model and input to the container.
+You can download trained model [here](https://mhaiyang.github.io/CVPR2020_GDNet/index.html).
+To copy the pretrained model and input directory to the container, run
 ```
-python infer.py --path_to_pretrained_model=PATH_TO_PRETRAINED_MODEL --input_dir=PATH_TO_DIR_WITH_IMAGES
+docker cp MODEL.PTH gdnet_container:/200.pth
+docker cp INPUT_DIR dgnet_container:/input
 ```
+
+To run the container, run
+```
+docker start gdnet_container
+```
+To copy the results from the container, run:
+```
+docker cp gdnet_container:/output OUTPUT_DIR
+```
+
 
 ## Old instruction
 ### Dataset
