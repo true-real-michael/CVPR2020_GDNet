@@ -84,7 +84,7 @@ def main():
             img = Image.open(os.path.join(opt.input_dir, img_name))
             if img.mode != 'RGB':
                 img = img.convert('RGB')
-                print("{} is a gray image.".format(name))
+                print("{} is a gray image.".format(img_name))
             w, h = img.size
             img_var = Variable(img_transform(img).unsqueeze(0)).to(device)
             f1, f2, f3 = net(img_var)
