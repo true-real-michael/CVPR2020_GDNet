@@ -24,10 +24,10 @@ from gdnet import GDNet
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def infer(scale,
-          pretrained_model_path,
-          output_dir,
-          input_dir: ,
+def infer(scale: int,
+          pretrained_model_path: str,
+          output_dir: str,
+          input_dir: str,
           do_crf_refine: bool):
     img_transform = transforms.Compose([
         transforms.Resize((scale, scale)),
