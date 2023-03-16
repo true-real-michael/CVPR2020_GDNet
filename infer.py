@@ -10,7 +10,6 @@
 """
 import os
 import time
-import argparse
 import numpy as np
 
 import torch
@@ -25,43 +24,13 @@ from gdnet import GDNet
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def main():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        '--path_to_pretrained_model',
-        type=str,
-        help='Path to the .pth file',
-        default='/200.pth'
-    )
-    parser.add_argument(
-        '--input_dir',
-        type=str,
-        help='Path to the directory that contains the images',
-        default='/input'
-    )
-    parser.add_argument(
-        '--output_dir',
-        type=str,
-        help='Path to the directory in which the result images are written',
-        default='/output'
-    )
-    parser.add_argument(
-        '--scale',
-        type=int,
-        default=416,
-        help='Scale parameter for resizing images. Default: 416'
-    )
-    parser.add_argument(
-        '--crf_refine',
-        action='store_true',
-        help='Optional CRF refinement. Default: False'
-    )
-
-    opt = parser.parse_args()
-
+def infer(scale,
+          pretrained_model_path,
+          output_dir,
+          input_dir: ,
+          do_crf_refine: bool):
     img_transform = transforms.Compose([
-        transforms.Resize((opt.scale, opt.scale)),
+        transforms.Resize((scale, scale)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
@@ -69,19 +38,19 @@ def main():
 
     net = GDNet().to(device)
 
-    net.load_state_dict(torch.load(opt.path_to_pretrained_model))
-    print('Load {} succeed!'.format(os.path.basename(opt.path_to_pretrained_model)))
+    net.load_state_dict(torch.load(pretrained_model_path))
+    print('Load {} succeed!'.format(os.path.basename(pretrained_model_path)))
 
-    if not os.path.exists(opt.output_dir):
-        os.makedirs(opt.output_dir)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     net.eval()
     with torch.no_grad():
-        img_list = [img_name for img_name in os.listdir(opt.input_dir)]
+        img_list = [img_name for img_name in os.listdir(input_dir)]
         start = time.time()
         for idx, img_name in enumerate(img_list):
             print('predicting for {}: {:>4d} / {}'.format(img_name, idx + 1, len(img_list)))
-            img = Image.open(os.path.join(opt.input_dir, img_name))
+            img = Image.open(os.path.join(input_dir, img_name))
             if img.mode != 'RGB':
                 img = img.convert('RGB')
                 print("{} is a gray image.".format(img_name))
@@ -94,7 +63,7 @@ def main():
             f1 = np.array(transforms.Resize((h, w))(to_pil(f1)))
             f2 = np.array(transforms.Resize((h, w))(to_pil(f2)))
             f3 = np.array(transforms.Resize((h, w))(to_pil(f3)))
-            if opt.crf_refine:
+            if do_crf_refine:
                 # f1 = crf_refine(np.array(img.convert('RGB')), f1)
                 # f2 = crf_refine(np.array(img.convert('RGB')), f2)
                 f3 = crf_refine(np.array(img.convert('RGB')), f3)
@@ -103,11 +72,7 @@ def main():
             #                                       img_name[:-4] + "_h.png"))
             # Image.fromarray(f2).save(os.path.join(ckpt_path, exp_name, '%s_%s' % (exp_name, args['snapshot']),
             #                                       img_name[:-4] + "_l.png"))
-            Image.fromarray(f3).save(os.path.join(opt.output_dir, img_name))
+            Image.fromarray(f3).save(os.path.join(output_dir, img_name))
 
         end = time.time()
         print("Average Time Is : {:.2f}".format((end - start) / len(img_list)))
-
-
-if __name__ == '__main__':
-    main()
