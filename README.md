@@ -25,7 +25,7 @@ If you use this code or our dataset (including test set), please cite:
 ### Installation
 First you need to clone this repository recursively (to clone the dss_crf submodule as well):
 ```
-git clone --recurse-submodules https://github.com/vnmsklnk/CVPR2020_GDNet
+git clone --recurse-submodules https://github.com/true-real-michael/CVPR2020_GDNet
 cd CVPR2020_GDNet
 ```
 
