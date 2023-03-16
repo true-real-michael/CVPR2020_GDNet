@@ -10,4 +10,4 @@ RUN pip install -U pip \
 
 RUN gdown "1xOwuH9lWizGVnPmEH77_81Sp9EAN054O"
 
-ENTRYPOINT ["python", "infer.py"]
+ENTRYPOINT ["python", "run.py"]
