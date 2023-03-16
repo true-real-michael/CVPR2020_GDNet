@@ -1,4 +1,7 @@
 FROM python:3.7-bullseye
+FROM pytorch/pytorch:1.0.1-cuda10.0-cudnn7-runtime
+
+WORKDIR /
 
 COPY . .
 

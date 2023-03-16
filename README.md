@@ -29,6 +29,8 @@ git clone --recurse-submodules https://github.com/true-real-michael/CVPR2020_GDN
 cd CVPR2020_GDNet
 ```
 
+Install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#install-guide) for GPU support.
+
 Then you need to build a docker image:
 ```
 docker build -t gdnet .
@@ -38,7 +40,7 @@ docker build -t gdnet .
 ### Usage
 INPUT_DIR should contain target images, OUTPUT_DIR will store the generated masks. Running the docker image:
 ```
-docker run --rm \
+docker run --rm --gpus all \
 -v INPUT_DIR:/input \
 -v OUTPUT_DIR:/output \
 gdnet
