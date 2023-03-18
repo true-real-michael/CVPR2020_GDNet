@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 from infer import infer
 
 if __name__ == '__main__':
@@ -8,19 +9,19 @@ if __name__ == '__main__':
         '--pretrained_model_path',
         type=str,
         help='Path to the .pth file',
-        default='/200.pth'
+        default=Path(__file__).parent / '200.pth'
     )
     parser.add_argument(
         '--input_dir',
         type=str,
         help='Path to the directory that contains the images',
-        default='/input'
+        default=Path(__file__).parent / 'input'
     )
     parser.add_argument(
         '--output_dir',
         type=str,
         help='Path to the directory in which the result images are written',
-        default='/output'
+        default=Path(__file__).parent / 'output'
     )
     parser.add_argument(
         '--scale',

@@ -41,8 +41,8 @@ docker build -t gdnet .
 INPUT_DIR should contain target images, OUTPUT_DIR will store the generated masks. Running the docker image:
 ```
 docker run --rm --gpus all \
--v INPUT_DIR:/input \
--v OUTPUT_DIR:/output \
+-v INPUT_DIR:/detector/input \
+-v OUTPUT_DIR:/detector/output \
 gdnet
 ```
 
