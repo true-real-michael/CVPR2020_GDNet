@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 import json
 
-from sklearn.metrics import jaccard_score
+from sklearn.metrics import jaccard_score, f1_score, accuracy_score, mean_absolute_error, balanced_accuracy_score
 from PIL import Image
 import numpy as np
 
@@ -26,10 +26,14 @@ class MetricsEvaluator:
         assert all([pred_name == gt_name for pred_name, gt_name in zip(self.pred_files, self.gt_files)])
 
     def _evaluate_pair(self, pred_file, gt_file):
-        pred_img = np.array(Image.open(self.prediction_dir / pred_file).convert('1'))
-        gt_img = np.array(Image.open(self.ground_truth_dir / gt_file).convert('1'))
+        pred = np.array(Image.open(self.prediction_dir / pred_file).convert('1')).flatten()
+        gt = np.array(Image.open(self.ground_truth_dir / gt_file).convert('1')).flatten()
         return {
-            'iou': jaccard_score(pred_img.flatten(), gt_img.flatten()),
+            'iou': jaccard_score(gt, pred),
+            'f1_score': f1_score(gt, pred),
+            'accuracy': accuracy_score(gt, pred),
+            'mean_absolute_error': mean_absolute_error(gt.astype(np.int8), pred.astype(np.int8)),
+            'balanced_error_rate': 1 - balanced_accuracy_score(gt, pred)
         }
 
     def evaluate(self):

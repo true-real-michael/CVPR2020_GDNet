@@ -11,3 +11,5 @@
 .idea
 input
 output
+venv
+ground_truth
