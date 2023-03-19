@@ -38,11 +38,26 @@ docker build -t gdnet .
 
 
 ### Usage
-INPUT_DIR should contain target images, OUTPUT_DIR will store the generated masks. Running the docker image:
+#### Predicting
+- INPUT_DIR should contain target images.
+- OUTPUT_DIR will store the generated masks and log.
+Running the docker image:
 ```
 docker run --rm --gpus all \
 -v INPUT_DIR:/detector/input \
 -v OUTPUT_DIR:/detector/output \
+gdnet
+```
+#### Predicting and Evaluating metrics.
+- INPUT_DIR should contain target images
+- OUTPUT_DIR will store the generated masks, log and calculated metrics for each image..
+- GT_DIR should contain ground truth grayscale/binary masks, each should have the **same name** as the corresponding image in INPUT_DIR.
+Running the docker image:
+```
+docker run --rm --gpus all \
+-v INPUT_DIR:/detector/input \
+-v OUTPUT_DIR:/detector/output \
+-v GT_DIR:/detector/ground_truth \
 gdnet
 ```
 
