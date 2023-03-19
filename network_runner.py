@@ -88,6 +88,10 @@ class NetworkRunner(NetworkRunnerBase):
         f1, f2, f3 = prediction
         logging.info(f"Image {img_name} processed. Writing results.")
         if self.calculate_secondary:
-            Image.fromarray(f1).save(self.output_dir / Path(img_name[:-4] + "_h.png"))
-            Image.fromarray(f2).save(self.output_dir / Path(img_name[:-4] + "_l.png"))
+            Image.fromarray(f1).save(
+                self.output_dir / Path(img_name.name + "_h" + img_name.suffix)
+            )
+            Image.fromarray(f2).save(
+                self.output_dir / Path(img_name.name + "_l" + img_name.suffix)
+            )
         Image.fromarray(f3).save(self.output_dir / Path(img_name))
