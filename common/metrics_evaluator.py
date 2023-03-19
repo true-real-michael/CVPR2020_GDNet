@@ -10,6 +10,7 @@ import json
 from sklearn.metrics import jaccard_score, f1_score, accuracy_score, mean_absolute_error, balanced_accuracy_score
 from PIL import Image
 import numpy as np
+from tqdm import tqdm
 
 
 class MetricsEvaluator:
@@ -39,7 +40,7 @@ class MetricsEvaluator:
     def evaluate(self):
         result = {}
 
-        for pred_file, gt_file in zip(self.pred_files, self.gt_files):
+        for pred_file, gt_file in tqdm(zip(self.pred_files, self.gt_files)):
             result[pred_file] = self._evaluate_pair(pred_file, gt_file)
 
         with open(self.output_path, 'w') as output_file:

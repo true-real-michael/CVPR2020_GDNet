@@ -7,7 +7,7 @@ import argparse
 from pathlib import Path
 
 from network_runner import NetworkRunner
-from metrics_evaluator import MetricsEvaluator
+from common.metrics_evaluator import MetricsEvaluator
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
