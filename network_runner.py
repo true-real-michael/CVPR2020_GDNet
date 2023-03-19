@@ -4,11 +4,11 @@
 #  Provided as is
 
 import logging
-from pathlib import Path
-
 import numpy as np
-from PIL import Image
 import torch.cuda
+
+from pathlib import Path
+from PIL import Image
 from torch.autograd import Variable
 from torchvision import transforms
 
@@ -18,24 +18,27 @@ from common.network_runner_base import NetworkRunnerBase
 
 
 class NetworkRunner(NetworkRunnerBase):
-    def __init__(self,
-                 input_dir: Path,
-                 output_dir: Path,
-                 log_path: Path,
-                 model_path: Path,
-                 do_crf_refine: bool,
-                 scale: int,
-                 calculate_secondary: bool):
-
+    def __init__(
+        self,
+        input_dir: Path,
+        output_dir: Path,
+        log_path: Path,
+        model_path: Path,
+        do_crf_refine: bool,
+        scale: int,
+        calculate_secondary: bool,
+    ):
         super().__init__(input_dir, output_dir, log_path, model_path)
         self.do_crf_refine = do_crf_refine
         self.calculate_secondary = calculate_secondary
 
-        self.img_transform = transforms.Compose([
-            transforms.Resize((scale, scale)),
-            transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-        ])
+        self.img_transform = transforms.Compose(
+            [
+                transforms.Resize((scale, scale)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+            ]
+        )
         self.to_pil = transforms.ToPILImage()
 
     def _predict(self, img, size):
@@ -62,24 +65,28 @@ class NetworkRunner(NetworkRunnerBase):
     def _load_model(self, model_path):
         with_gpu = torch.cuda.is_available()
         self.device = torch.device("cuda" if with_gpu else "cpu")
-        logging.info("CUDA is available, device = 'gpu'" if with_gpu else "CUDA is unavailable, device = 'cpu'")
+        logging.info(
+            "CUDA is available, device = 'gpu'"
+            if with_gpu
+            else "CUDA is unavailable, device = 'cpu'"
+        )
         self.net = GDNet().to(self.device)
         self.net.load_state_dict(torch.load(model_path))
-        logging.info('Loading model succeeded.')
+        logging.info("Loading model succeeded.")
         self.net.eval()
 
     def _read_img(self, img_name):
-        logging.info(f'Image {img_name} read')
+        logging.info(f"Image {img_name} read")
         img = Image.open(self.input_dir / Path(img_name))
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
-            logging.info(f'Image {img_name} is a gray image. Converting to RGB.')
+        if img.mode != "RGB":
+            img = img.convert("RGB")
+            logging.info(f"Image {img_name} is a gray image. Converting to RGB.")
 
         return img, img.size
 
     def _write_img(self, img_name, prediction):
         f1, f2, f3 = prediction
-        logging.info(f'Image {img_name} processed. Writing results.')
+        logging.info(f"Image {img_name} processed. Writing results.")
         if self.calculate_secondary:
             Image.fromarray(f1).save(self.output_dir / Path(img_name[:-4] + "_h.png"))
             Image.fromarray(f2).save(self.output_dir / Path(img_name[:-4] + "_l.png"))

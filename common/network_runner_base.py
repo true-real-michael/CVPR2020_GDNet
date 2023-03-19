@@ -6,27 +6,24 @@
 
 import logging
 import os
-from abc import ABC, abstractmethod
-from pathlib import Path
 import time
 
+from abc import ABC, abstractmethod
+from pathlib import Path
 from tqdm import tqdm
 
 
 class NetworkRunnerBase(ABC):
-    def __init__(self,
-                 input_dir: Path,
-                 output_dir: Path,
-                 log_path: Path,
-                 model_path: Path):
+    def __init__(
+        self, input_dir: Path, output_dir: Path, log_path: Path, model_path: Path
+    ):
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.log_path = log_path
 
-        logging.basicConfig(filename=log_path, encoding='utf-8', level=logging.INFO)
+        output_dir.mkdir(parents=True, exist_ok=True)
 
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+        logging.basicConfig(filename=log_path, encoding="utf-8", level=logging.INFO)
 
         self._load_model(model_path)
 
@@ -36,9 +33,9 @@ class NetworkRunnerBase(ABC):
             with self._Timer() as timer:
                 prediction = self._predict(img, meta)
 
-            logging.info(f'image {img_name} processed. elapsed {timer.elapsed} ns')
+            logging.info(f"image {img_name} processed. elapsed {timer.elapsed} ns")
             self._write_img(img_name, prediction)
-        logging.info('evaluation done')
+        logging.info("evaluation done")
 
     @abstractmethod
     def _predict(self, img, meta):
