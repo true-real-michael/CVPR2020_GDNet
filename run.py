@@ -36,7 +36,7 @@ if __name__ == '__main__':
         help='Scale parameter for resizing images. Default: 416'
     )
     parser.add_argument(
-        '--do_crf_refine',
+        '--do-crf-refine',
         action='store_true',
         help='Optional CRF refinement. Default: False'
     )
