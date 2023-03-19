@@ -23,6 +23,8 @@ class NetworkRunnerBase(ABC):
         self.output_dir = output_dir
         self.log_path = log_path
 
+        logging.basicConfig(filename=log_path, encoding='utf-8', level=logging.INFO)
+
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 

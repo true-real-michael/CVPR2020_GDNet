@@ -42,22 +42,11 @@ if __name__ == '__main__':
         help='Optional CRF refinement. Default: False'
     )
     parser.add_argument(
-        '--log-path',
-        type=Path,
-        default=Path(__file__).parent / 'log.txt'
-    )
-    parser.add_argument(
         '--ground_truth_dir',
         type=Path,
         default=None,
         help='Directory containing ground truth masks for input images.'
              'If specified, metrics for predictions are calculated.'
-    )
-    parser.add_argument(
-        '--metrics_output_path',
-        type=Path,
-        default=Path(__file__).parent / 'metrics.json',
-        help='Path of where to store calculated metrics'
     )
     parser.add_argument(
         '--calculate_secondary',
@@ -68,14 +57,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     NetworkRunner(input_dir=args.input_dir,
-                  output_dir=args.output_dir,
-                  log_path=args.log_path,
+                  output_dir=args.output_dir / 'masks',
+                  log_path=args.output_dir / 'log.txt',
                   model_path=args.pretrained_model_path,
                   do_crf_refine=args.do_crf_refine,
                   scale=args.scale,
                   calculate_secondary=args.calculate_secondary).run()
 
     if args.ground_truth_dir:
-        MetricsEvaluator(prediction_dir=args.output_dir,
+        MetricsEvaluator(prediction_dir=args.output_dir / 'masks',
                          ground_truth_dir=args.ground_truth_dir,
-                         output_path=args.metrics_output_path).evaluate()
+                         output_path=args.output_dir / 'metrics.json').evaluate()

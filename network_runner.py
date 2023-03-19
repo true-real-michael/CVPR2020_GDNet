@@ -31,8 +31,6 @@ class NetworkRunner(NetworkRunnerBase):
         self.do_crf_refine = do_crf_refine
         self.calculate_secondary = calculate_secondary
 
-        logging.basicConfig(filename=log_path, encoding='utf-8', level=logging.INFO)
-
         self.img_transform = transforms.Compose([
             transforms.Resize((scale, scale)),
             transforms.ToTensor(),
