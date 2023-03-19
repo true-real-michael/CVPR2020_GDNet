@@ -1,3 +1,8 @@
+#  @Date    : 2023-03-19
+#  @Editor  : Mikhail Kiselyov
+#  @E-mail  : kiselev.0353@gmail.com
+#  Provided as is
+
 import argparse
 from pathlib import Path
 
