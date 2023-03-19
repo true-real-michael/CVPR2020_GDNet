@@ -75,12 +75,12 @@ class NetworkRunner(NetworkRunnerBase):
         logging.info("Loading model succeeded.")
         self.net.eval()
 
-    def _read_img(self, img_name):
-        logging.info(f"Image {img_name} read")
-        img = Image.open(self.input_dir / Path(img_name))
+    def _read_img(self, img_path):
+        logging.info(f"Image {img_path.name} read")
+        img = Image.open(img_path)
         if img.mode != "RGB":
             img = img.convert("RGB")
-            logging.info(f"Image {img_name} is a gray image. Converting to RGB.")
+            logging.info(f"Image {img_path.name} is a gray image. Converting to RGB.")
 
         return img, img.size
 
