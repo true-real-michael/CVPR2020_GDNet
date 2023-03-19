@@ -17,13 +17,13 @@ from torchvision import transforms
 
 from gdnet import GDNet
 from misc import crf_refine
+from metrics_evaluator import MetricsEvaluator
 
 
 class NetworkRunner:
     def __init__(self,
                  input_dir: Path,
                  output_dir: Path,
-                 ground_truth_dir: Optional[Path],
                  log_path: Path,
                  model_path: Path,
                  do_crf_refine: bool,
@@ -31,7 +31,6 @@ class NetworkRunner:
                  calculate_secondary: bool):
         self.input_dir = input_dir
         self.output_dir = output_dir
-        self.ground_truth_dir = ground_truth_dir
         self.log_path = log_path
         self.model_path = model_path
         self.scale = scale
