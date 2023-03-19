@@ -51,10 +51,10 @@ class NetworkRunner:
 
         def __exit__(self, *args):
             self.end = time.perf_counter_ns()
-            self._elapsed = self.end - self.start
+            self.elapsed = self.end - self.start
 
         def elapsed(self):
-            return self._elapsed
+            return self.elapsed
 
     def run(self):
         with torch.no_grad():
@@ -79,8 +79,8 @@ class NetworkRunner:
                     f3 = np.array(transforms.Resize(size)(self.to_pil(f3)))
 
                     if self.do_crf_refine:
-                        # f1 = crf_refine(np.array(img.convert('RGB')), f1)
-                        # f2 = crf_refine(np.array(img.convert('RGB')), f2)
+                        f1 = crf_refine(np.array(img), f1)
+                        f2 = crf_refine(np.array(img), f2)
                         f3 = crf_refine(np.array(img), f3)
 
                 self._write_img(img_name, f1, f2, f3, timer.elapsed())
