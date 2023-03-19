@@ -3,7 +3,6 @@
 #  @E-mail  : kiselev.0353@gmail.com
 #  Provided as is
 
-import os
 import json
 import numpy as np
 
