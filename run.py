@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
-from infer import infer
+
+from network_runner import NetworkRunner
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -34,11 +35,17 @@ if __name__ == '__main__':
         action='store_true',
         help='Optional CRF refinement. Default: False'
     )
+    parser.add_argument(
+        '--log-path',
+        type=Path,
+        default=Path(__file__).parent / 'output' / 'log.txt'
+    )
 
     args = parser.parse_args()
 
-    infer(args.scale,
-          args.pretrained_model_path,
-          args.output_dir,
-          args.input_dir,
-          args.do_crf_refine)
+    NetworkRunner(args.input_dir,
+                  args.output_dir,
+                  args.log_path,
+                  args.pretrained_model_path,
+                  args.do_crf_refine,
+                  args.scale).run()
