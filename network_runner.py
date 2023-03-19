@@ -6,6 +6,7 @@
 import os
 import time
 import logging
+from typing import Optional
 
 import numpy as np
 from pathlib import Path
@@ -22,16 +23,20 @@ class NetworkRunner:
     def __init__(self,
                  input_dir: Path,
                  output_dir: Path,
+                 ground_truth_dir: Optional[Path],
                  log_path: Path,
                  model_path: Path,
                  do_crf_refine: bool,
-                 scale: int):
+                 scale: int,
+                 calculate_secondary: bool):
         self.input_dir = input_dir
         self.output_dir = output_dir
+        self.ground_truth_dir = ground_truth_dir
         self.log_path = log_path
         self.model_path = model_path
         self.scale = scale
         self.do_crf_refine = do_crf_refine
+        self.calculate_secondary = calculate_secondary
 
         logging.basicConfig(filename=log_path, encoding='utf-8', level=logging.INFO)
 
@@ -69,16 +74,18 @@ class NetworkRunner:
                 with self._Timer() as timer:
                     img_var = Variable(self.img_transform(img).unsqueeze(0)).to(self.device)
                     f1, f2, f3 = self.net(img_var)
-                    f1 = f1.data.squeeze(0).cpu()
-                    f2 = f2.data.squeeze(0).cpu()
+                    if self.calculate_secondary:
+                        f1 = f1.data.squeeze(0).cpu()
+                        f2 = f2.data.squeeze(0).cpu()
+                        f1 = np.array(transforms.Resize(size)(self.to_pil(f1)))
+                        f2 = np.array(transforms.Resize(size)(self.to_pil(f2)))
                     f3 = f3.data.squeeze(0).cpu()
-                    f1 = np.array(transforms.Resize(size)(self.to_pil(f1)))
-                    f2 = np.array(transforms.Resize(size)(self.to_pil(f2)))
                     f3 = np.array(transforms.Resize(size)(self.to_pil(f3)))
 
                     if self.do_crf_refine:
-                        f1 = crf_refine(np.array(img), f1)
-                        f2 = crf_refine(np.array(img), f2)
+                        if self.calculate_secondary:
+                            f1 = crf_refine(np.array(img), f1)
+                            f2 = crf_refine(np.array(img), f2)
                         f3 = crf_refine(np.array(img), f3)
 
                 logging.info(f'Image {img_name} processed.{idx+1}/{len(img_list)}. {timer.elapsed} ns elapsed')
@@ -105,6 +112,7 @@ class NetworkRunner:
 
     def _write_img(self, img_name, f1, f2, f3):
         logging.info(f'Image {img_name} processed. Writing results.')
-        Image.fromarray(f1).save(self.output_dir / Path(img_name[:-4] + "_h.png"))
-        Image.fromarray(f2).save(self.output_dir / Path(img_name[:-4] + "_l.png"))
+        if self.calculate_secondary:
+            Image.fromarray(f1).save(self.output_dir / Path(img_name[:-4] + "_h.png"))
+            Image.fromarray(f2).save(self.output_dir / Path(img_name[:-4] + "_l.png"))
         Image.fromarray(f3).save(self.output_dir / Path(img_name))
