@@ -21,35 +21,46 @@ If you use this code or our dataset (including test set), please cite:
 }
 ```
 
-## Updated on 07.03.2023
+## Updated on 15.03.2023
 ### Installation
-First you need to clone this repository:
+First you need to clone this repository recursively (to clone the dss_crf submodule as well):
 ```
-git clone https://github.com/vnmsklnk/CVPR2020_GDNet
+git clone --recurse-submodules https://github.com/true-real-michael/CVPR2020_GDNet
 cd CVPR2020_GDNet
 ```
 
-Then you can create a Python 3.7 virtual environment with new requirements.txt file:
+Install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#install-guide) for GPU support.
+
+Then you need to build a docker image:
 ```
-virtualenv -p `which python3.7` venv
-source venv/bin/activate
-pip install -r requirements.txt
+docker build -t gdnet .
 ```
 
-Finally you need to install `pydensecrf` with active `venv`:
-```
-git clone https://github.com/vnmsklnk/dss_crf.git
-cd dss_crf
-python setup.py install
-```
 
 ### Usage
-First you need to download trained model at [here](https://mhaiyang.github.io/CVPR2020_GDNet/index.html).
+#### Predicting
+- INPUT_DIR should contain target images.
+- OUTPUT_DIR will store the generated masks and log.
+Running the docker image:
+```
+docker run --rm --gpus all \
+-v INPUT_DIR:/detector/input \
+-v OUTPUT_DIR:/detector/output \
+gdnet
+```
+#### Predicting and Evaluating metrics.
+- INPUT_DIR should contain target images
+- OUTPUT_DIR will store the generated masks, log and calculated metrics for each image..
+- GT_DIR should contain ground truth grayscale/binary masks, each should have the **same name** as the corresponding image in INPUT_DIR.
+Running the docker image:
+```
+docker run --rm --gpus all \
+-v INPUT_DIR:/detector/input \
+-v OUTPUT_DIR:/detector/output \
+-v GT_DIR:/detector/ground_truth \
+gdnet
+```
 
-Then you can run `infer.py`:
-```
-python infer.py --path_to_pretrained_model=PATH_TO_PRETRAINED_MODEL --input_dir=PATH_TO_DIR_WITH_IMAGES
-```
 
 ## Old instruction
 ### Dataset

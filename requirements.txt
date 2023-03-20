@@ -1,7 +1,10 @@
-torch==1.0.0
-torchvision==0.2.1
+torch
+torchvision
 Cython
-pillow==6.2.2
-scikit-image==0.16.2
+pillow
+scikit-image
 xlwt
 tqdm
+numpy
+pydensecrf
+scikit-learn

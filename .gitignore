@@ -8,3 +8,8 @@
 /excel/
 /MSD/
 /ckpt/
+.idea
+input
+output
+venv
+ground_truth
