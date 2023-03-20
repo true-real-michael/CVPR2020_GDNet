@@ -21,7 +21,7 @@ class NetworkRunnerBase(ABC):
 
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        logging.basicConfig(filename=log_path, encoding="utf-8", level=logging.INFO)
+        logging.basicConfig(filename=log_path, level=logging.INFO)
 
         self._load_model(model_path)
 
@@ -53,9 +53,9 @@ class NetworkRunnerBase(ABC):
 
     class _Timer:
         def __enter__(self):
-            self.start = time.perf_counter_ns()
+            self.start = time.perf_counter()
             return self
 
         def __exit__(self, *args):
-            self.end = time.perf_counter_ns()
+            self.end = time.perf_counter()
             self.elapsed = self.end - self.start
